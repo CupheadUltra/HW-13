@@ -1,4 +1,3 @@
-
 let user = {
     name: "John",
     age: 30,
@@ -6,19 +5,16 @@ let user = {
     premium: true
   };
   
-  user = { ...user, mood: 'happy' };
-  user = { ...user, hobby: 'skydiving', premium: false };
+  user = { ...user, mood: 'happy', hobby: 'skydiving', premium: false };
   
-  for (const key of Object.keys(user)) {
-    const value = user[key];
+  for (const [key, value] of Object.entries(user)) {
     console.log(`${key}: ${value}`);
   }
   
-  function countProps(obj) {
-    return Object.keys(obj).length;
-  }
-
-  function findBestEmployee(employees) {
+  const countProps = (obj) => Object.keys(obj).length;
+  console.log(countProps(user));
+  
+  const findBestEmployee = (employees) => {
     let bestEmployee = "";
     let maxTasks = 0;
   
@@ -30,9 +26,16 @@ let user = {
     }
   
     return bestEmployee;
-  }
-
-  function countTotalSalary(employees) {
+  };
+  
+  const employees = {
+    John: 50,
+    Sarah: 80,
+    Mary: 35
+  };
+  console.log(findBestEmployee(employees));
+  
+  const countTotalSalary = (employees) => {
     let totalSalary = 0;
   
     for (const salary of Object.values(employees)) {
@@ -40,22 +43,35 @@ let user = {
     }
   
     return totalSalary;
-  }
-
-  function getAllPropValues(arr, prop) {
+  };
+  
+  const salaries = {
+    John: 3000,
+    Sarah: 4000,
+    Mary: 2500
+  };
+  console.log(countTotalSalary(salaries));
+  
+  const getAllPropValues = (arr, prop) => {
     const values = [];
   
-    for (const item of arr) {
-      if (item.hasOwnProperty(prop)) {
-        const { [prop]: value } = item;
+    for (const { [prop]: value } of arr) {
+      if (value !== undefined) {
         values.push(value);
       }
     }
   
     return values;
-  }
-
-  function calculateTotalPrice(allProducts, productName) {
+  };
+  
+  const products = [
+    { name: "Apple", price: 30 },
+    { name: "Banana", price: 20 },
+    { name: "Orange", price: 25 }
+  ];
+  console.log(getAllPropValues(products, "name"));
+  
+  const calculateTotalPrice = (allProducts, productName) => {
     let total = 0;
   
     for (const { name, price, quantity } of allProducts) {
@@ -66,44 +82,40 @@ let user = {
     }
   
     return total;
-  }
-
+  };
+  
+  const store = [
+    { name: "Laptop", price: 1000, quantity: 3 },
+    { name: "Phone", price: 500, quantity: 5 },
+    { name: "Tablet", price: 200, quantity: 10 }
+  ];
+  console.log(calculateTotalPrice(store, "Phone"));
+  
   const account = {
     balance: 0,
     transactions: [],
-    
-    createTransaction(amount, type) {
-      return { amount, type, id: this.transactions.length + 1 };
-    },
-    
+  
     deposit(amount) {
       this.balance += amount;
-      const transaction = this.createTransaction(amount, "deposit");
-      this.transactions.push(transaction);
+      this.transactions.push({ type: "deposit", amount });
     },
-    
+  
     withdraw(amount) {
-      if (amount > this.balance) {
-        console.log("Недостатньо коштів на рахунку.");
-        return;
-      }
       this.balance -= amount;
-      const transaction = this.createTransaction(amount, "withdraw");
-      this.transactions.push(transaction);
+      this.transactions.push({ type: "withdraw", amount });
     },
-    
+  
     getBalance() {
       return this.balance;
     },
-    
-    getTransactionDetails(id) {
-      return this.transactions.find(transaction => transaction.id === id) || null;
-    },
-    
-    getTransactionTotal(type) {
-      return this.transactions
-        .filter(transaction => transaction.type === type)
-        .reduce((total, { amount }) => total + amount, 0);
+  
+    getTransactionHistory() {
+      return this.transactions;
     }
   };
+  
+  account.deposit(1000);
+  account.withdraw(500);
+  console.log("Balance:", account.getBalance());
+  console.log("Transaction History:", account.getTransactionHistory());
   
